@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+using namespace std;
+mutex mx;condition_variable cv;
+bool isodd=true;
+void func1(int n){
+if(n%2!=0)n--;
+for(int i=n;i>0;i-=2){
+unique_lock<mutex>lock(mx);
+cv.wait(lock,[]{return !isodd;});
+cout<<"thread 1:"<<i<<endl;
+isodd=true;
+lock.unlock();
+cv.notify_one();
+}
+}
+void func2(int n){
+    if(n%2==0)n--;
+    for(int i=1;i<=n;i+=2){
+        unique_lock<mutex>lock(mx);
+        cv.wait(lock,[]{return isodd;});
+        cout<<"Thread 2:"<<i<<endl;
+        isodd=false;
+        lock.unlock();
+        cv.notify_one();
+    }
+}
+int main (){
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+cout.tie(NULL);
+     int n;
+     cin>>n;
+     thread t1(func1,n);
+     thread t2(func2,n);
+     t1.join();
+     t2.join();
+     return 0;
+}
