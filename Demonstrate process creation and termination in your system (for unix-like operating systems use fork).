@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+using namespace std;
+int main (){
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+cout.tie(NULL);
+     pid_t pid;
+     pid=fork();
+     if(pid==-1)cout<<"Error\n";
+     else if(pid==0){
+        cout<<"my pid is: "<<getpid()<<endl;
+        cout<<"My parent pid is"<<getppid()<<endl;
+        cout<<"child terminating"<<endl;
+     }
+     else{
+        cout<<"my pid"<<getpid()<<endl;
+        cout<<"my child pid is"<<pid<<endl;
+        wait(NULL);
+        cout<<"Parent terminating:"<<endl;
+     }
+     return 0;
+}
