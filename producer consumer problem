@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+using namespace std;
+mutex mx;condition_variable cv_not_full,cv_not_empty;
+queue<int>fifo;
+int max_size=5;
+void func1(int n){
+    for(int i=1;i<=n;i++){
+        unique_lock<mutex>lock(mx);
+        cv_not_full.wait(lock,[]{return fifo.size()<max_size;});
+        fifo.push(i);
+        cout<<"producer produced "<<i<<" "<<"current fifo size"<<fifo.size()<<endl;
+        lock.unlock();
+        cv_not_empty.notify_one();
+    }
+}
+void func2(int n){
+    for(int i=1;i<=n;i++){
+        unique_lock<mutex>lock(mx);
+        cv_not_empty.wait(lock,[]{return fifo.size();});
+        fifo.pop();
+        cout<<"consumer consumed "<<i<<" "<<"current fifo size"<<fifo.size()<<endl;
+        lock.unlock();
+        cv_not_full.notify_one();
+    }
+}
+int main (){
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+cout.tie(NULL);
+     int n;
+     cin>>n;
+     thread t1(func1,n);
+     thread t2(func2,n);
+     t1.join();
+     t2.join();
+     return 0;
+}
