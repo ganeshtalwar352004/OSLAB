@@ -1,0 +1,15 @@
+echo "enter a number"
+read num
+n0=1
+n1=1
+echo $n0
+echo $n1
+count=2
+while [ $count -lt $num ]
+do
+k=$(($n0+$n1))
+echo $k
+n0=$n1
+n1=$k
+count=$(($count+1))
+done
