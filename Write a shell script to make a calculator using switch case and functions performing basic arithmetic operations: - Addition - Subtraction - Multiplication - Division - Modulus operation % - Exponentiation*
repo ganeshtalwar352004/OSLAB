@@ -1,0 +1,23 @@
+echo "enter operands"
+read a
+read b
+echo "enter operation"
+read op
+case $op in
+1)
+echo "difference is:"
+echo $(($a-$b))
+;;
+2)
+echo "addition is:"
+echo $(($a+$b))
+;;
+3)
+echo "multiply is:"
+echo $(($a*$b))
+;;
+4)
+echo "divide is:"
+echo $(($a/$b))
+;;
+esac
